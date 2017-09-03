@@ -89,7 +89,7 @@
 
   Vector.world(relativeVector) --> vector(table)
       Recursively transforms the passed vector based on its basis vector or
-      simply return a copy of the passed variable if it was already in world
+      simply return a copy of the passed vector if it was already in world
       coordinates.
 
   Vector.relative(basis, worldVector) --> vector(table)
@@ -212,7 +212,7 @@ local VectorMT = {
       end
     else
       for i=1, max(#a, #b) do
-        result[i] = (a[i] or 1) * (a[i] or 1)
+        result[i] = (a[i] or 1) * (b[i] or 1)
       end
     end
 
