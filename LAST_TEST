@@ -1,0 +1,43 @@
+Mon Sep  4 22:13:37 UTC 2017
+de61892
+
+== tests.vector_test ==========================================================
+[----------]
+[ RUN      ] vector.create
+[       OK ] vector.create 0 sec
+[ RUN      ] vector.access
+[       OK ] vector.access 0 sec
+[ RUN      ] vector.equality
+[       OK ] vector.equality 0 sec
+[ RUN      ] vector.uniform
+[       OK ] vector.uniform 0 sec
+[ RUN      ] vector.clone
+[       OK ] vector.clone 0 sec
+[ RUN      ] vector.scalar_mul
+[       OK ] vector.scalar_mul 0 sec
+[ RUN      ] vector.scalar_div
+[       OK ] vector.scalar_div 0 sec
+[ RUN      ] vector.vector_mul
+[       OK ] vector.vector_mul 0 sec
+[ RUN      ] vector.vector_div
+[       OK ] vector.vector_div 0 sec
+[ RUN      ] vector.vector_add
+[       OK ] vector.vector_add 0 sec
+[ RUN      ] vector.vector_sub
+[       OK ] vector.vector_sub 0 sec
+[ RUN      ] vector.mixed_dim_arith
+[       OK ] vector.mixed_dim_arith 0 sec
+[ RUN      ] vector.length
+[       OK ] vector.length 0 sec
+[ RUN      ] vector.dot_product
+[       OK ] vector.dot_product 0 sec
+[ RUN      ] vector.cross_product
+[       OK ] vector.cross_product 0 sec
+[ RUN      ] vector.world_transform
+[       OK ] vector.world_transform 0 sec
+[ RUN      ] vector.relative_transform
+[       OK ] vector.relative_transform 0 sec
+[ RUN      ] vector.snap_transform
+[       OK ] vector.snap_transform 0 sec
+[==========]
+[  PASSED  ] 18 test(s)

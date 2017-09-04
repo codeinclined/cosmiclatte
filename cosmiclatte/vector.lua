@@ -26,6 +26,10 @@
       Translates coordinate or color components to numeric indexes to retrieve
       those components' values.
 
+  __eq(a, b) --> boolean
+      Checks that a and b have the same number of components and that they all
+      equal one another without regard to basis.
+
   __add(a, b) --> vector(table)
   __sub(a, b) --> vector(table)
   __mul(a, b) --> vector(table)
@@ -183,6 +187,20 @@ local VectorMT = {
     return Vector[i]
   end,
 
+  __eq = function(a, b) --> a = b : boolean
+    if #a ~= #b then
+      return false
+    end
+
+    for i = 1, #a do
+      if a[i] ~= b[i] then
+        return false
+      end
+    end
+
+    return true
+  end,
+
   __add = function(a, b) --> a + b : #result = max(#a, #b)
     local result = {}
 
@@ -228,7 +246,7 @@ local VectorMT = {
       end
     else
       for i=1, #a do
-        result[i] = a[i] / b[i]
+        result[i] = a[i] / (b[i] or 1)
       end
     end
 
@@ -325,7 +343,8 @@ end
 function Vector.world(relativeVector) --> Vector transformed to world coordinates : #relativeVector
   if relativeVector.basis then
     assert(relativeVector.basis ~= relativeVector, "Vector's basis set to itself")
-    return relativeVector + Vector.world(relativeVector.basis)
+    -- TODO: Figure out why we need to clone the result of addition here
+    return Vector.clone(relativeVector + Vector.world(relativeVector.basis))
   end
 
   return Vector.clone(relativeVector)
@@ -338,7 +357,9 @@ function Vector.relative(basis, worldVector) --> Vector transformed to local coo
 end
 
 function Vector.snap(basis, vector) --> Vector snapped to a new basis maintaining its offset : max(#vector, #basis)
-  local result = Vector.world(vector or Vector.uniform(#basis)) - Vector.world(basis)
+  -- TODO: Figure out why we need to clone the result of subtraction here
+  local result = Vector.clone(
+    Vector.world(vector or Vector.uniform(#basis)) - Vector.world(basis))
   result.basis = basis
   return result
 end
