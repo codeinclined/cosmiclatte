@@ -1,5 +1,5 @@
-Mon Sep  4 22:13:37 UTC 2017
-de61892
+Wed Sep  6 03:04:00 UTC 2017
+aa3d31d
 
 == tests.vector_test ==========================================================
 [----------]
@@ -39,5 +39,7 @@ de61892
 [       OK ] vector.relative_transform 0 sec
 [ RUN      ] vector.snap_transform
 [       OK ] vector.snap_transform 0 sec
+[ RUN      ] vector.oop
+[       OK ] vector.oop 0 sec
 [==========]
-[  PASSED  ] 18 test(s)
+[  PASSED  ] 19 test(s)

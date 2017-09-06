@@ -46,6 +46,8 @@ test.vector.access = function()
   test.is_number(vec1.a)
 end
 
+
+
 test.vector.equality = function()
   local vec1 = Vector(1, 2, 3, 4)
   local vec2 = Vector(1, 2, 3, 4)
@@ -213,7 +215,7 @@ do
   end
 
   test.vector.relative_transform = function()
-    local result = Vector.relative(vec2, vec1)
+    local result = Vector.relative(vec1, vec2)
 
     test.is_table(result)
     test.is_true(result == vec1)
@@ -221,12 +223,37 @@ do
   end
 
   test.vector.snap_transform = function()
-    local result = Vector.snap(vec2, vec1)
+    local result = Vector.snap(vec1, vec2)
 
     test.is_table(result)
     test.is_false(result == vec1)
     test.is_true(result == vec1 - vec2)
   end
+end
+
+-- Misc.
+test.vector.oop = function()
+  local vec1 = Vector(1, 2, 3)
+  local vec2 = Vector(3, 2, 1)
+  local vec3 = Vector(4, 5, 6)
+
+  test.is_true(Vector.clone(vec1) == vec1:clone())
+  test.is_true(Vector.string(vec1) == vec1:string())
+
+  test.is_true(Vector.set_relative(Vector.clone(vec1), vec2, vec3) ==
+                 Vector.clone(vec1):set_relative(vec2, vec3))
+  test.is_true(Vector.set_world(Vector.clone(vec1), vec2) ==
+                 Vector.clone(vec1):set_world(vec2))
+
+  test.is_true(Vector.dot(vec1, vec2) == vec1:dot(vec2))
+  test.is_true(Vector.cross(vec1, vec2) == vec1:cross(vec2))
+  test.is_true(Vector.length_squared(vec1) == vec1:length_squared())
+  test.is_true(Vector.length(vec1) == vec1:length())
+  test.is_true(Vector.normalize(vec1) == vec1:normalize())
+
+  test.is_true(Vector.world(vec1) == vec1:world())
+  test.is_true(Vector.relative(vec1, vec2) == vec1:relative(vec2))
+  test.is_true(Vector.snap(vec1, vec2) == vec1:snap(vec2))
 end
 
 -- Summarize if we are not running in the full suite

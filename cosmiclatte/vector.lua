@@ -4,20 +4,44 @@
   Generic lua-based vectors of any dimension
 
   This module provides Lua (LuaGIT version planned) functions for vectors of
-  any number of dimensions. This module uses a prototype-based interface
-  rather than OOP.
+  any number of dimensions. Returned tables can be used via the table returned
+  by this module or via OOP -- fooVector:dot(barVector)
 
-  Returned vectors are simply tables with a metatable for
-  arithmetic operations. Each component of vectors are indexed from 1 to
-  remain consistent with the Lua standard libraries. The __index metamethod will
-  translate requests to "x", "y", "z", "w" and "r", "g", "b", "a" to their
-  respective indexes, therefore it may be faster to refer to the coordinates by
-  index rather than by component name.
+  Returned vectors are simply tables with a metatable for arithmetic operations.
+  Each component of vectors are indexed from 1 to remain consistent with the
+  Lua standard libraries. The __index metamethod will translate requests to "x",
+  "y", "z", "w" and "r", "g", "b", "a" to their respective indexes, therefore
+  it may be more efficient to refer to the coordinates by index rather than by
+  component name in loops. The __index metamethod also maps to the Vector table,
+  providing an OOP-like interface to all vector tables.
 
   If the "basis" property is set on a vector to another vector, then the vector
   will be interpreted as being relative to that vector. Vectors can be converted
   back and forth between world and local coordinates using Vector.world,
   Vector.relative, Vector.set_world, Vector.set_relative, and Vector.snap.
+
+================================================================================
+  MIT License
+
+  Copyright (c) 2017 Joshua Taylor
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
 
 ================================================================================
   Metamethods:
@@ -96,12 +120,12 @@
       simply return a copy of the passed vector if it was already in world
       coordinates.
 
-  Vector.relative(basis, worldVector) --> vector(table)
+  Vector.relative(worldVector, basis) --> vector(table)
       Returns a copy of the passed worldVector as a vector relative to the
       passed basis vector. Does not perform any transformation before setting
       the new vector basis (see the Vector.snap function for this behavior)
 
-  Vector.snap(basis, vector) --> vector(table)
+  Vector.snap(vector, basis) --> vector(table)
       Transforms vector from world space or another basis to the passed basis
       vector and returns the new relative vector.
 
@@ -110,11 +134,9 @@
                    Vector.snap(b, a) --> c       = Local Vector < 10 7 10 >
                                          c.basis = b
 
-  Vector.snap(basis) --> vector(table)
+  Vector.snap(vector, basis) --> vector(table)
       Returns a new, zero-magnitude vector relative to the provided basis.
 
-  Vector.clone(vector) --> vector(table)
-      Returns a deep copy of the passed vector maintaining its basis if set.
 
 ================================================================================
   Factory Methods:
@@ -130,36 +152,16 @@
       Creates a new vector of zero magnitude with the passed number of
       dimensions.
 
-================================================================================
-  MIT License
+  Vector.clone(vector) --> vector(table)
+      Returns a deep copy of the passed vector maintaining its basis if set.
 
-  Copyright (c) 2017 Joshua Taylor
-
-  Permission is hereby granted, free of charge, to any person obtaining a copy
-  of this software and associated documentation files (the "Software"), to deal
-  in the Software without restriction, including without limitation the rights
-  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-  copies of the Software, and to permit persons to whom the Software is
-  furnished to do so, subject to the following conditions:
-
-  The above copyright notice and this permission notice shall be included in all
-  copies or substantial portions of the Software.
-
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-  SOFTWARE.
-================================================================================
 
 ]]
 
 
 local Vector = {
   _NAME = "cosmiclatte.vector",
-  _VERSION = "0.1.0",
+  _VERSION = "0.1.1",
   _AUTHOR = "Joshua Taylor <taylor.joshua88@gmail.com>",
   _UPSTREAM = "https://github.com/taylorjoshua88/cosmiclatte",
   _LICENSE = "mit",
@@ -350,13 +352,13 @@ function Vector.world(relativeVector) --> Vector transformed to world coordinate
   return Vector.clone(relativeVector)
 end
 
-function Vector.relative(basis, worldVector) --> Vector transformed to local coordinates : #worldVector
+function Vector.relative(worldVector, basis) --> Vector transformed to local coordinates : #worldVector
   local result = Vector.clone(worldVector)
   result.basis = basis
   return result
 end
 
-function Vector.snap(basis, vector) --> Vector snapped to a new basis maintaining its offset : max(#vector, #basis)
+function Vector.snap(vector, basis) --> Vector snapped to a new basis maintaining its offset : max(#vector, #basis)
   -- TODO: Figure out why we need to clone the result of subtraction here
   local result = Vector.clone(
     Vector.world(vector or Vector.uniform(#basis)) - Vector.world(basis))
